@@ -8,8 +8,11 @@ import numpy as np
 from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
 from datetime import datetime
+import matplotlib.pyplot as plt
 
-class eSamudaay:  
+class eSamudaay:
+
+  
   def __init__(self, filepath):
 
     self.filepath = filepath
@@ -50,31 +53,39 @@ class eSamudaay:
     self.reasons = list(given_reasons)
 
 
-  def expand(x, reasons):
-    if x['failure_reasons']:
-      for reason in reasons:
+  def expand(self, x):
+    if x['failure_reasons'] != None:
+      for reason in self.reasons:
         if reason in x['failure_reasons']:
           x[reason] = 1
-    else:
-      x[reasons] = 0
+    
     return x
 
 
   def process_data(self):
     self.process_reasons()
     self.data[self.reasons] = 0
-    self.data.apply(eSamudaay.expand, axis = 1, args = (self.reasons))
+    self.data = self.data.apply(self.expand, axis = 1)
 
 
   def get_inventory(self):
-    return self.data['product_name'].value_counts()
+    return self.data['product_name'].value_counts().head(7)
   
   
   def get_business_names(self):
     return list(self.urldict.keys())
   
+  def get_product_data(self):
+    attributes = ['sku_id', 'product_name', 'failure_reasons']
+    product_data = self.data[attributes]
+    return product_data
+  
+  
+  def issues(self):
+    return self.data[self.reasons].sum().to_dict()
+  
 def main():
-    st.title("Business name")
+    #st.title("Business name")
     # html_temp = """
     # <div style="background-color:tomato;padding:10px">
     # <h2 style="color:white;text-align:center;"> Test text</h2>
@@ -85,10 +96,34 @@ def main():
     
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
+    st.title(option)
     hack.get_company(option)
-    st.write(hack.get_inventory())
-     
+    fig=plt.figure(figsize=(15,8))
+    st.header('All products')
+    proddf = hack.get_product_data()
+    proddf = proddf.set_index('sku_id')
+    st.write(proddf)
+    st.header('Product Search Bar')
+    prodlist = list(proddf['product_name'])
+    #prodname = st.text_input('Enter product', 'Product name')
+    prodoption = st.selectbox('Select a Product', prodlist)
+    st.write(proddf[proddf['product_name']==prodoption])
+    st.header('Bar chart')
+    st.bar_chart(hack.get_inventory(), 400, 500)
+    st.header('Pie chart')
+    pieval = hack.issues()
+    
+    labels = pieval.keys()
+    sizes = pieval.values()
+    
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, labels=labels)
+    ax1.axis('equal')  
+
+    st.pyplot(fig1)
 
 if __name__=='__main__':
     main()
+    
     
