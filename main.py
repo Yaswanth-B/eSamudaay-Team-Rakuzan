@@ -9,7 +9,7 @@ from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
 from datetime import datetime
 import matplotlib.pyplot as plt
-
+import streamlit.components.v1 as components  # Import Streamlit
 class eSamudaay:
 
   
@@ -93,7 +93,9 @@ def main():
     # """
     # st.markdown(html_temp,unsafe_allow_html=True)
     hack = eSamudaay('output.json')
-    
+    #components.html(""" <div class= "area" > <ul class= "circles" ><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div> """)
+    with open('style.css') as f:
+      st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
     st.title(option)
