@@ -94,6 +94,25 @@ class eSamudaay:
         product_stats.fillna(0, inplace = True)
         return product_stats
 
+    def get_error_rate(self):
+        total_inventory = self.get_inventory().sum()
+        total_errors = self.data.drop(['sku_id', 'failure_reasons', ], axis=1).groupby(by='product_name').sum().sum(
+            axis=1).sum()
+        if total_inventory != 0:
+            error_rate = total_errors / total_inventory
+            return error_rate
+        else:
+            return 0
+
+    def get_classification(self):
+        error_rate = self.get_error_rate()
+        if error_rate < 1:
+            return 1
+        elif error_rate == 1:
+            return 2
+        else:
+            return 3
+
 
 def return_business_details(business_name):
     with open('output.json') as json_file:
