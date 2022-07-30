@@ -92,6 +92,7 @@ class eSamudaay:
       product_stats['%' + reason] = products_sum[reason]/inventory * 100
     product_stats = product_stats.reset_index()
     product_stats = product_stats.rename( columns = {'index': 'product_name'})
+    product_stats.fillna(0, inplace = True)
     return product_stats
 
 def return_business_details(business_name):
