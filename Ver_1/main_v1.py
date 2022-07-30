@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 import json
 import numpy as np
+!pip install seaborn
 import seaborn as sns
 from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
