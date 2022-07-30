@@ -1,11 +1,13 @@
 # eSamudaay-Team-Rakuzan
 
 <h2>Team Members</h2><br>
- - Yaswanth Biruduraju
- - Mihir Agarwal
- - Prakhar Tripathi
- - Garvit Gopalani
- - Nishad Khade
+<ul>
+ <li>Yaswanth Biruduraju</li>
+ <li>Mihir Agarwal</li>
+ <li>Prakhar Tripathi</li>
+ <li>Garvit Gopalani</li>
+ <li>Nishad Khade</li>
+</ul>
 
 <h4>To run in local system :</h4><br>
 Clone the github repository in terminal run the command:<br><br>
