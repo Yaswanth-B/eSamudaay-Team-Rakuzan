@@ -134,7 +134,6 @@ python-dateutil==2.8.2
 pytweening==1.0.4
 pytz==2022.1
 pytz-deprecation-shim==0.1.0.post0
-pywin32==303
 pywin32-ctypes==0.2.0
 pywinpty==2.0.5
 pyzmq==22.3.0
