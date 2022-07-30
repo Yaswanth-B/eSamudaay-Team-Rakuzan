@@ -90,6 +90,7 @@ class eSamudaay:
             product_stats['%' + reason] = products_sum[reason]/inventory * 100
         product_stats = product_stats.reset_index()
         product_stats = product_stats.rename(columns={'index': 'product_name'})
+        product_stats.fillna(0, inplace = True)
         return product_stats
 
 
@@ -150,14 +151,15 @@ def main():
     fig = plt.figure(figsize=(15, 8))
     st.header('All products')
     proddf = hack.product_stats()
-    
-    st.write(proddf)
+    subset = [col for col in proddf.columns if col != 'product_name']
+
+    st.dataframe(proddf.style.format(subset = subset, formatter = "{:.2f}"))
     
     st.header('Product Search Bar')
     prodlist = list(proddf['product_name'])
     
     prodoption = st.selectbox('Select a Product', prodlist)
-    st.write(proddf[proddf['product_name'] == prodoption])
+    st.dataframe(proddf[proddf['product_name'] == prodoption].style.format(subset=subset, formatter="{:.2f}"))
     st.header('Bar chart')
     st.bar_chart(hack.get_inventory(), 400, 500)
     st.header('Pie chart')
