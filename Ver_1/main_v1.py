@@ -6,6 +6,7 @@ import pandas as pd
 import requests
 import json
 import numpy as np
+import seaborn as sns
 from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
 from datetime import datetime
@@ -133,35 +134,54 @@ def return_business_details(business_name):
 
 
 def main():
-    hack = eSamudaay('output.json')    
-      
+    # st.markdown("<a href='#linkto_top'>Select Business</a>", unsafe_allow_html=True),
+    #         st.markdown("<a href='#linkto_product'>View Products</a>", unsafe_allow_html=True),
+    #          st.markdown("<a href='#linkto_bottom'>About Team</a>", unsafe_allow_html=True)
+    hack = eSamudaay('output.json')
+
+    # with st.sidebar:
+    #     selected = option_menu(
+    #         menu_title="Main Menu",
+    #         options=[st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True)])
+
     with st.sidebar:
-        st.markdown("[Select Business](#rakuzan-analysis)", unsafe_allow_html=True)
-        st.markdown("[Search Products](#product-search-bar)", unsafe_allow_html=True)
+        st.markdown("[Select business](#name-of-program)",
+                    unsafe_allow_html=True)
+        st.markdown("[Search Products](#product-search-bar)",
+                    unsafe_allow_html=True)
         st.markdown("[About Team](#about-the-team)", unsafe_allow_html=True)
 
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-        
-    st.header("Rakuzan Analysis")
+
+    st.header("Name of Program")
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
-    
+    # st.title(option)
     hack.get_company(option)
     fig = plt.figure(figsize=(15, 8))
     st.header('All products')
     proddf = hack.product_stats()
     subset = [col for col in proddf.columns if col != 'product_name']
-
+    #proddf = proddf.set_index('sku_id')
     st.dataframe(proddf.style.format(subset = subset, formatter = "{:.2f}"))
-    
+
     st.header('Product Search Bar')
     prodlist = list(proddf['product_name'])
-    
+    #prodname = st.text_input('Enter product', 'Product name')
     prodoption = st.selectbox('Select a Product', prodlist)
     st.dataframe(proddf[proddf['product_name'] == prodoption].style.format(subset=subset, formatter="{:.2f}"))
     st.header('Bar chart')
-    st.bar_chart(hack.get_inventory(), 400, 500)
+    # st.bar_chart(hack.get_inventory(), 400, 500)
+
+    fig = plt.figure(figsize=(10, 4))
+    sns.barplot(hack.get_inventory().index,
+                hack.get_inventory().sort_values(ascending=False).values)
+    plt.xticks(rotation=20)
+    plt.xlabel("Product Name")
+    plt.ylabel("Complaint")
+    st.pyplot(fig)
+
     st.header('Pie chart')
     pieval = hack.issues()
 
@@ -169,11 +189,20 @@ def main():
     sizes = pieval.values()
 
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, labels=labels)
+    ax1.pie(sizes, labels=labels,
+            autopct='%1.1f%%')
     ax1.axis('equal')
 
     st.pyplot(fig1)
-    st.header("About the Team")
+    # st.header("About the Team")
+    # data = [['Yaswanth Biruduraju', 'MIT Manipal', 'link'], ['Nishad Khade', 'MIT Manipal', 'link'], 
+    # ['Garvit Gopalani', 'MIT Manipal', 'link'], ['Mihir Agarwal', 'MIT Manipal', 'link'], 
+    # ['Prakhar Tripathi', 'MIT Manipal', 'link']]
+  
+# Create the pandas DataFrame
+    # teamdetailsdf = pd.DataFrame(data, columns=['Name', 'Institute', 'Linkedin'])
     
+    # st.write(teamdetailsdf.style)
+
 if __name__ == '__main__':
     main()
