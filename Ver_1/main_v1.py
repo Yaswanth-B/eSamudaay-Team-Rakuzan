@@ -69,7 +69,7 @@ class eSamudaay:
         self.data = self.data.apply(self.expand, axis=1)
 
     def get_inventory(self):
-        return self.data['product_name'].value_counts().head(7)
+        return self.data['product_name'].value_counts()
 
     def get_business_names(self):
         return list(self.urldict.keys())
@@ -206,8 +206,8 @@ def main():
     
 
     fig = plt.figure(figsize=(10, 4))
-    sns.barplot(hack.get_inventory().index,
-                hack.get_inventory().sort_values(ascending=False).values)
+    sns.barplot(hack.get_inventory().head(7).index,
+                hack.get_inventory().head(7).sort_values(ascending=False).values)
     plt.xticks(rotation=15)
     plt.xlabel("Product Name")
     plt.ylabel("No. of Complaints")
