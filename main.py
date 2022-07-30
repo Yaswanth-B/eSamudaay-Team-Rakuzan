@@ -83,7 +83,54 @@ class eSamudaay:
   
   def issues(self):
     return self.data[self.reasons].sum().to_dict()
+
+  def product_stats(self):
+    inventory = self.get_inventory()
+    products_sum = self.data.drop(['sku_id', 'failure_reasons'], axis = 1).groupby(by = 'product_name').sum()
+    product_stats = pd.DataFrame()
+    for reason in self.reasons:
+      product_stats['%' + reason] = products_sum[reason]/inventory * 100
+    product_stats = product_stats.reset_index()
+    product_stats = product_stats.rename( columns = {'index': 'product_name'})
+    return product_stats
+
+def return_business_details(business_name):
+  with open('output.json') as json_file:
+      urldict = json.load(json_file)
+  url = urldict[business_name]
+  url = url[:-7]
+  response = requests.request("GET", url)
+  data = json.loads(response.text)
+  business_details = {}
+  business_details['address'] = []
+  if (data['address']):
+    if 'geo_addr' in data['address']:
+      if (data['address']['geo_addr']):
+        for key in data['address']['geo_addr'].keys():
+          business_details['address'].append(data['address']['geo_addr'][key])
+      else:
+        business_details['address'].append('No data available')
+    else:
+      business_details['address'].append('No data available')
+  else:
+    business_details['address'].append('No data available')
+      
+  business_details['address'] = ",".join(business_details['address'])
+
+  business_details['avg_ratings'] = 0
+  if (data['ratings_info']):
+    if 'ratings_avg' in data['ratings_info']:
+      business_details['avg_ratings'] = data['ratings_info']['ratings_avg']
   
+  business_details['ratings_count'] = 0
+  if (data['ratings_info']):
+    if 'ratings_count' in data['ratings_info']:
+      business_details['ratings_count'] = data['ratings_info']['ratings_count']
+
+  business_details['social_links'] = data['social_links']
+  return business_details
+
+
 def main():
     #st.title("Business name")
     # html_temp = """
@@ -102,8 +149,8 @@ def main():
     hack.get_company(option)
     fig=plt.figure(figsize=(15,8))
     st.header('All products')
-    proddf = hack.get_product_data()
-    proddf = proddf.set_index('sku_id')
+    proddf = hack.product_stats()
+    #proddf = proddf.set_index('sku_id')
     st.write(proddf)
     st.header('Product Search Bar')
     prodlist = list(proddf['product_name'])

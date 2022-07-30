@@ -9,7 +9,8 @@ from fastapi import FastAPI, Response, status
 from pydantic import BaseModel
 from datetime import datetime
 import matplotlib.pyplot as plt
-
+import streamlit.components.v1 as components
+from streamlit_option_menu import option_menu  # Import Streamlit
 class eSamudaay:
 
   
@@ -84,7 +85,15 @@ class eSamudaay:
   def issues(self):
     return self.data[self.reasons].sum().to_dict()
 
-
+  def product_stats(self):
+    inventory = self.get_inventory()
+    products_sum = self.data.drop(['sku_id', 'failure_reasons'], axis = 1).groupby(by = 'product_name').sum()
+    product_stats = pd.DataFrame()
+    for reason in self.reasons:
+      product_stats['%' + reason] = products_sum[reason]/inventory * 100
+    product_stats = product_stats.reset_index()
+    product_stats = product_stats.rename( columns = {'index': 'product_name'})
+    return product_stats
 
 def return_business_details(business_name):
   with open('output.json') as json_file:
@@ -131,32 +140,31 @@ def main():
     # </div>
     # """
     # st.markdown(html_temp,unsafe_allow_html=True)
+    with st.sidebar:
+        selected=option_menu(
+        menu_title="Main Menu",
+        options=["Select Business","View Products","About Team"])
     hack = eSamudaay('output.json')
-    
+    #components.html(""" <div class= "area" > <ul class= "circles" ><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div> """)
+    with open('style.css') as f:
+      st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
-    
     st.title(option)
-    st.write(return_business_details(option))
     hack.get_company(option)
     fig=plt.figure(figsize=(15,8))
     st.header('All products')
-
-    proddf = hack.get_product_data()
-    proddf = proddf.set_index('sku_id')
+    proddf = hack.product_stats()
+    #proddf = proddf.set_index('sku_id')
     st.write(proddf)
     st.header('Product Search Bar')
-
     prodlist = list(proddf['product_name'])
     #prodname = st.text_input('Enter product', 'Product name')
     prodoption = st.selectbox('Select a Product', prodlist)
-
     st.write(proddf[proddf['product_name']==prodoption])
     st.header('Bar chart')
-
     st.bar_chart(hack.get_inventory(), 400, 500)
     st.header('Pie chart')
-
     pieval = hack.issues()
     
     labels = pieval.keys()
@@ -171,4 +179,5 @@ def main():
 
 if __name__=='__main__':
     main()
+    
     
