@@ -2,14 +2,12 @@
 import numpy as np
 import pandas as pd
 import streamlit as st
-import pandas as pd
+
 import requests
 import json
-import numpy as np
+
 import seaborn as sns
-from fastapi import FastAPI, Response, status
-from pydantic import BaseModel
-from datetime import datetime
+
 import matplotlib.pyplot as plt
 import streamlit.components.v1 as components
 from streamlit_option_menu import option_menu
