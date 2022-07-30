@@ -41,3 +41,37 @@
       font-size: 5rem;
     }
   }
+  .css-18ni7ap{
+    margin-top: -10rem;
+  }
+
+.css-15tx938 {
+    width: fit-content;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color:#eee;
+    -webkit-box-shadow: 5px 5px 10px #657383;
+    -moz-box-shadow: 5px 5px 10px #657383;
+    box-shadow: 5px 5px 10px #657383;
+}
+.css-10trblm {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color:#eee;
+
+}  
+canvas{
+  /* font-family: cursive, sans-serif;
+      background-color: #657383;
+      color: white;
+      padding: 5px;
+      border-radius: 2px;
+      box-shadow: 1px 1px 2px 2px #657383;
+      background-blend-mode: lighten; */
+      background-color: #657383;
+      -webkit-box-shadow: 5px 5px 10px #657383;
+      -moz-box-shadow: 5px 5px 10px #657383;
+      box-shadow: 5px 5px 10px #657383;
+}
