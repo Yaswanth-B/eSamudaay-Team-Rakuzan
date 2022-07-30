@@ -132,38 +132,30 @@ def return_business_details(business_name):
 
 
 def main():
-    # st.markdown("<a href='#linkto_top'>Select Business</a>", unsafe_allow_html=True), 
-    #         st.markdown("<a href='#linkto_product'>View Products</a>", unsafe_allow_html=True),
-    #          st.markdown("<a href='#linkto_bottom'>About Team</a>", unsafe_allow_html=True)
-    hack = eSamudaay('output.json')
-    
-    # with st.sidebar:
-    #     selected = option_menu(
-    #         menu_title="Main Menu",
-    #         options=[st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True)])
+    hack = eSamudaay('output.json')    
       
     with st.sidebar:
-        st.markdown("[Select business](#name-of-program)", unsafe_allow_html=True)
+        st.markdown("[Select Business](#rakuzan-analysis)", unsafe_allow_html=True)
         st.markdown("[Search Products](#product-search-bar)", unsafe_allow_html=True)
         st.markdown("[About Team](#about-the-team)", unsafe_allow_html=True)
 
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
         
-    st.header("Name of Program")
+    st.header("Rakuzan Analysis")
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
-    #st.title(option)
+    
     hack.get_company(option)
     fig = plt.figure(figsize=(15, 8))
     st.header('All products')
     proddf = hack.product_stats()
-    #proddf = proddf.set_index('sku_id')
+    
     st.write(proddf)
     
     st.header('Product Search Bar')
     prodlist = list(proddf['product_name'])
-    #prodname = st.text_input('Enter product', 'Product name')
+    
     prodoption = st.selectbox('Select a Product', prodlist)
     st.write(proddf[proddf['product_name'] == prodoption])
     st.header('Bar chart')
@@ -180,5 +172,6 @@ def main():
 
     st.pyplot(fig1)
     st.header("About the Team")
+    
 if __name__ == '__main__':
     main()
