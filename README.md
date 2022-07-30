@@ -9,12 +9,12 @@
  <li>Nishad Khade</li>
 </ul>
 
-<h4>To run in local system :</h4><br>
+<h4>To run in local system :</h4>
 Clone the github repository in terminal run the command:<br><br>
 
-streamlit run main_v1.py<br>
+streamlit run main_v1.py<br><br>
 
-<h4>To view online follow to link :</h4><br>
+<h4>To view online follow the link :</h4>
 https://esamudaay-rakuzan.herokuapp.com/
 
 <h3>Contents of Repository</h3>
