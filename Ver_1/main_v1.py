@@ -132,21 +132,25 @@ def return_business_details(business_name):
 
 
 def main():
-    #st.title("Business name")
-    # html_temp = """
-    # <div style="background-color:tomato;padding:10px">
-    # <h2 style="color:white;text-align:center;"> Test text</h2>
-    # </div>
-    # """
-    # st.markdown(html_temp,unsafe_allow_html=True)
-    with st.sidebar:
-        selected = option_menu(
-            menu_title="Main Menu",
-            options=["Select Business", "View Products", "About Team"])
+    # st.markdown("<a href='#linkto_top'>Select Business</a>", unsafe_allow_html=True), 
+    #         st.markdown("<a href='#linkto_product'>View Products</a>", unsafe_allow_html=True),
+    #          st.markdown("<a href='#linkto_bottom'>About Team</a>", unsafe_allow_html=True)
     hack = eSamudaay('output.json')
-    #components.html(""" <div class= "area" > <ul class= "circles" ><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li></ul></div> """)
+    
+    # with st.sidebar:
+    #     selected = option_menu(
+    #         menu_title="Main Menu",
+    #         options=[st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True)])
+      
+    with st.sidebar:
+        st.markdown("[Select business](#name-of-program)", unsafe_allow_html=True)
+        st.markdown("[Search Products](#product-search-bar)", unsafe_allow_html=True)
+        st.markdown("[About Team](#about-the-team)", unsafe_allow_html=True)
+
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+        
+    st.header("Name of Program")
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
     #st.title(option)
@@ -156,6 +160,7 @@ def main():
     proddf = hack.product_stats()
     #proddf = proddf.set_index('sku_id')
     st.write(proddf)
+    
     st.header('Product Search Bar')
     prodlist = list(proddf['product_name'])
     #prodname = st.text_input('Enter product', 'Product name')
@@ -174,7 +179,6 @@ def main():
     ax1.axis('equal')
 
     st.pyplot(fig1)
-
-
+    st.header("About the Team")
 if __name__ == '__main__':
     main()
