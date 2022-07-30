@@ -25,7 +25,7 @@
   } */
   .stApp {
     /* animation: scroll 70s linear infinite; */
-    background-image: url("https://static.vecteezy.com/system/resources/previews/003/339/072/original/contemporary-artistic-abstract-aesthetic-background-illustration-free-vector.jpg");
+    background-image: url("https://images.unsplash.com/photo-1658937364065-60f3f6818724?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=893&q=80");
     background-repeat: no-repeat;
     background-size: cover;
     /* color: #eee;
@@ -89,5 +89,8 @@ canvas{
       -webkit-box-shadow: 5px 5px 10px #657383;
       -moz-box-shadow: 5px 5px 10px #657383;
       box-shadow: 5px 5px 10px #657383;
+      width: 10000px;
 }
-
+.css-1pd56a0 {
+  
+}
