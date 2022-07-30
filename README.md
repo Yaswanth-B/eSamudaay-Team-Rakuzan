@@ -1,6 +1,6 @@
 # eSamudaay-Team-Rakuzan
 
-<h2>Team Members</h2><br>
+<h2>Team Members</h2>
 <ul>
  <li>Yaswanth Biruduraju</li>
  <li>Mihir Agarwal</li>
