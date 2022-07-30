@@ -149,7 +149,7 @@ def main():
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
     business_list = hack.get_business_names()
     option = st.selectbox('Select a Business', business_list)
-    st.title(option)
+    #st.title(option)
     hack.get_company(option)
     fig = plt.figure(figsize=(15, 8))
     st.header('All products')
