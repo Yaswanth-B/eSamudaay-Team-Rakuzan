@@ -179,6 +179,13 @@ def main():
     # st.title(option)
     hack.get_company(option)
     fig = plt.figure(figsize=(15, 8))
+    classification = hack.get_classification()
+    if classification == 1:
+        st.subheader("Comments:\nVery few problems per product")
+    elif classification == 2:
+        st.subheader("Comments:\nSome changes are needed. Every product has an issue.")
+    else:
+        st.subheader("Comments:\nMajor changes need. Too many issues per product")
     st.header('All products')
     proddf = hack.product_stats()
     subset = [col for col in proddf.columns if col != 'product_name']
