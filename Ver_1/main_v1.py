@@ -93,6 +93,25 @@ class eSamudaay:
         product_stats = product_stats.rename(columns={'index': 'product_name'})
         product_stats.fillna(0, inplace = True)
         return product_stats
+    def get_error_rate(self):
+        total_inventory = self.get_inventory().sum()
+        total_errors = self.data.drop(['sku_id', 'failure_reasons', ], axis=1).groupby(by='product_name').sum().sum(
+            axis=1).sum()
+        if total_inventory != 0:
+            error_rate = total_errors / total_inventory
+            return error_rate
+        else:
+            return 0
+
+    def get_classification(self):
+        error_rate = self.get_error_rate()
+        if error_rate < 1:
+            return 1
+        elif error_rate == 1:
+            return 2
+        else:
+            return 3
+
 
 
 def return_business_details(business_name):
@@ -134,17 +153,13 @@ def return_business_details(business_name):
 
 
 def main():
-    # st.markdown("<a href='#linkto_top'>Select Business</a>", unsafe_allow_html=True),
-    #         st.markdown("<a href='#linkto_product'>View Products</a>", unsafe_allow_html=True),
-    #          st.markdown("<a href='#linkto_bottom'>About Team</a>", unsafe_allow_html=True)
+    
     hack = eSamudaay('output.json')
 
-    # with st.sidebar:
-    #     selected = option_menu(
-    #         menu_title="Main Menu",
-    #         options=[st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True), st.markdown("[All products](#section-1)", unsafe_allow_html=True)])
+    
 
     with st.sidebar:
+        st.write("Main Menu")
         st.markdown("[Select business](#name-of-program)",
                     unsafe_allow_html=True)
         st.markdown("[Search Products](#product-search-bar)",
@@ -154,32 +169,49 @@ def main():
     with open('style.css') as f:
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
 
-    st.header("Name of Program")
+    st.header("Rakuzan Analysis")
     business_list = hack.get_business_names()
-    option = st.selectbox('Select a Business', business_list)
-    # st.title(option)
+    option = st.selectbox('Select a Business', business_list,index=55)
+    
     hack.get_company(option)
     fig = plt.figure(figsize=(15, 8))
+    classification = hack.get_classification()
+    st.subheader("Comments")
+    if classification == 1:
+        error_rate = hack.get_error_rate()
+        st.subheader(f"Issues per product: {error_rate:.2f}\nVery few problems per product")
+    elif classification == 2:
+        error_rate = hack.get_error_rate()
+        st.subheader(f"Issues per product: {error_rate:.2f}\nSome changes are needed. Every product has an issue.")
+    else:
+        error_rate = hack.get_error_rate()
+        st.subheader(f"Issues per product: {error_rate:.2f}\nMajor changes need. Too many issues per product")
     st.header('All products')
     proddf = hack.product_stats()
+    
+
     subset = [col for col in proddf.columns if col != 'product_name']
-    #proddf = proddf.set_index('sku_id')
+    
     st.dataframe(proddf.style.format(subset = subset, formatter = "{:.2f}"))
+    
+   
 
     st.header('Product Search Bar')
     prodlist = list(proddf['product_name'])
-    #prodname = st.text_input('Enter product', 'Product name')
+    
     prodoption = st.selectbox('Select a Product', prodlist)
     st.dataframe(proddf[proddf['product_name'] == prodoption].style.format(subset=subset, formatter="{:.2f}"))
+    st.header("Business Analysis")
     st.header('Bar chart')
-    # st.bar_chart(hack.get_inventory(), 400, 500)
+    
 
     fig = plt.figure(figsize=(10, 4))
     sns.barplot(hack.get_inventory().index,
                 hack.get_inventory().sort_values(ascending=False).values)
-    plt.xticks(rotation=20)
+    plt.xticks(rotation=15)
     plt.xlabel("Product Name")
-    plt.ylabel("Complaint")
+    plt.ylabel("No. of Complaints")
+    plt.title("Products with highest Complaints \n (Priority Resolution List)")
     st.pyplot(fig)
 
     st.header('Pie chart')
@@ -192,17 +224,16 @@ def main():
     ax1.pie(sizes, labels=labels,
             autopct='%1.1f%%')
     ax1.axis('equal')
-
+    plt.title("Failure Reason Distribution for overall business")
     st.pyplot(fig1)
-    # st.header("About the Team")
-    # data = [['Yaswanth Biruduraju', 'MIT Manipal', 'link'], ['Nishad Khade', 'MIT Manipal', 'link'], 
-    # ['Garvit Gopalani', 'MIT Manipal', 'link'], ['Mihir Agarwal', 'MIT Manipal', 'link'], 
-    # ['Prakhar Tripathi', 'MIT Manipal', 'link']]
+    st.header("About the Team")
+    data = [['Yaswanth Biruduraju', 'MIT Manipal'], ['Nishad Khade', 'MIT Manipal'], 
+    ['Garvit Gopalani', 'MIT Manipal'], ['Mihir Agarwal', 'MIT Manipal'],
+    ['Prakhar Tripathi', 'MIT Manipal']]
   
-# Create the pandas DataFrame
-    # teamdetailsdf = pd.DataFrame(data, columns=['Name', 'Institute', 'Linkedin'])
+    teamdetailsdf = pd.DataFrame(data, columns=['Name', 'Institute'])
     
-    # st.write(teamdetailsdf.style)
+    st.write(teamdetailsdf)
 
 if __name__ == '__main__':
     main()
