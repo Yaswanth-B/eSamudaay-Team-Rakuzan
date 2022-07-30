@@ -11,7 +11,7 @@ from pydantic import BaseModel
 from datetime import datetime
 import matplotlib.pyplot as plt
 import streamlit.components.v1 as components
-from streamlit_option_menu import option_menu  # Import Streamlit
+from streamlit_option_menu import option_menu
 
 
 class eSamudaay:
