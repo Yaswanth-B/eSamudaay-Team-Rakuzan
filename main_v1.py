@@ -158,7 +158,7 @@ def main():
 
     with st.sidebar:
         st.write("Main Menu")
-        st.markdown("[Select business](#name-of-program)",
+        st.markdown("[Select business](#rakuzan-analysis)",
                     unsafe_allow_html=True)
         st.markdown("[Search Products](#product-search-bar)",
                     unsafe_allow_html=True)
